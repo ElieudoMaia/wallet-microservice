@@ -60,3 +60,11 @@ func TestUpdateClientEmptyEmail(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Equal(t, "email is required", err.Error())
 }
+
+func TestAddAccountToClient(t *testing.T) {
+	client, _ := NewClient("John Doe", "any@mail.com")
+	account, _ := NewAccount(client)
+	err := client.AddAccount(account)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(client.Accounts))
+}
