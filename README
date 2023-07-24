@@ -6,3 +6,6 @@ go mod tidy
 
 # Rodar todos os testes de todas as pastas
 go test ./...
+
+# Instando pacote do sqlite
+go get github.com/mattn/go-sqlite3
