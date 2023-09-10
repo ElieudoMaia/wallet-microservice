@@ -5,6 +5,7 @@ import (
 
 	"github.com/elieudomaia/ms-wallet-app/internal/entity"
 	"github.com/elieudomaia/ms-wallet-app/internal/gateway"
+	"github.com/elieudomaia/ms-wallet-app/pkg/events"
 )
 
 type CreateTransactionInputDTO struct {
@@ -20,12 +21,21 @@ type CreateTransactionOutputDTO struct {
 type CreateTransactionUseCase struct {
 	TransactionGateway gateway.TransactionGateway
 	AccountGateway     gateway.AccountGateway
+	EventDispatcher    events.EventDispatcher
+	TransactionCreated events.EventInterface
 }
 
-func NewCreateTransactionUseCase(transactionGateway gateway.TransactionGateway, accountGateway gateway.AccountGateway) *CreateTransactionUseCase {
+func NewCreateTransactionUseCase(
+	transactionGateway gateway.TransactionGateway,
+	accountGateway gateway.AccountGateway,
+	eventDispatcher events.EventDispatcher,
+	transactionCreated events.EventInterface,
+) *CreateTransactionUseCase {
 	return &CreateTransactionUseCase{
 		TransactionGateway: transactionGateway,
 		AccountGateway:     accountGateway,
+		EventDispatcher:    eventDispatcher,
+		TransactionCreated: transactionCreated,
 	}
 }
 
@@ -46,7 +56,13 @@ func (uc *CreateTransactionUseCase) Execute(input *CreateTransactionInputDTO) (*
 	if err4 != nil {
 		return nil, err4
 	}
-	return &CreateTransactionOutputDTO{
+
+	output := &CreateTransactionOutputDTO{
 		TransactionID: transaction.ID,
-	}, nil
+	}
+
+	uc.TransactionCreated.SetPayload(output)
+	uc.EventDispatcher.Dispatch(uc.TransactionCreated)
+
+	return output, nil
 }
