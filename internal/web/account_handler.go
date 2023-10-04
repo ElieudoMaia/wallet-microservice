@@ -11,6 +11,12 @@ type WebAccountHandler struct {
 	CreateAccountUseCase create_account.CreateAccountUseCase
 }
 
+func NewAccountHandler(createAccountUseCase create_account.CreateAccountUseCase) *WebAccountHandler {
+	return &WebAccountHandler{
+		CreateAccountUseCase: createAccountUseCase,
+	}
+}
+
 func (h *WebAccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	var dto create_account.CreateAccountInputDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)

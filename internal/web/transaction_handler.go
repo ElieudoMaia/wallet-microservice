@@ -11,6 +11,12 @@ type WebTransactionHandler struct {
 	CreateTrasactionUseCase create_transaction.CreateTransactionUseCase
 }
 
+func NewTransactionHandler(createTransactionUseCase create_transaction.CreateTransactionUseCase) *WebTransactionHandler {
+	return &WebTransactionHandler{
+		CreateTrasactionUseCase: createTransactionUseCase,
+	}
+}
+
 func (h *WebTransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	var dto create_transaction.CreateTransactionInputDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
