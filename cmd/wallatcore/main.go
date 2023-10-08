@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/wallet")
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/wallet?parseTime=true")
 	if err != nil {
 		panic(err)
 	}
@@ -42,9 +42,9 @@ func main() {
 	accountHandler := web.NewAccountHandler(*createAccountUseCase)
 	transactionHandler := web.NewTransactionHandler(*createTransactionUseCase)
 
-	webserver.AddHandler("/client", clientHandler.CreateClient)
-	webserver.AddHandler("/account", accountHandler.CreateAccount)
-	webserver.AddHandler("/transaction", transactionHandler.CreateTransaction)
+	webserver.AddHandler("/clients", clientHandler.CreateClient)
+	webserver.AddHandler("/accounts", accountHandler.CreateAccount)
+	webserver.AddHandler("/transactions", transactionHandler.CreateTransaction)
 
 	fmt.Println("Server running on port", port)
 	webserver.Start()
