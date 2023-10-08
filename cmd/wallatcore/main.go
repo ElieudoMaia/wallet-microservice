@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "root", "mysql", "3306", "wallet"))
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/wallet")
 	if err != nil {
 		panic(err)
 	}
@@ -34,7 +34,9 @@ func main() {
 	createAccountUseCase := create_account.NewCreateAccountUseCase(accountDb, clientDb)
 	createTransactionUseCase := create_transaction.NewCreateTransactionUseCase(transactionDb, accountDb, *eventDispatcher, transactionCreatedEvent)
 
-	webserver := webserver.NewWebServer(":8080")
+	port := "8080"
+
+	webserver := webserver.NewWebServer(fmt.Sprintf(":%s", port))
 
 	clientHandler := web.NewWebClientHandler(*createClientUseCase)
 	accountHandler := web.NewAccountHandler(*createAccountUseCase)
@@ -44,5 +46,6 @@ func main() {
 	webserver.AddHandler("/account", accountHandler.CreateAccount)
 	webserver.AddHandler("/transaction", transactionHandler.CreateTransaction)
 
+	fmt.Println("Server running on port", port)
 	webserver.Start()
 }
