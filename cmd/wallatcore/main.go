@@ -42,7 +42,7 @@ func main() {
 		return database.NewTransactionDB(db)
 	})
 
-	createTransactionUseCase := create_transaction.NewCreateTransactionUseCase(*uow, *eventDispatcher, transactionCreatedEvent)
+	createTransactionUseCase := create_transaction.NewCreateTransactionUseCase(uow, eventDispatcher, transactionCreatedEvent)
 	createClientUseCase := create_client.NewCreateClientUseCase(clientDb)
 	createAccountUseCase := create_account.NewCreateAccountUseCase(accountDb, clientDb)
 
