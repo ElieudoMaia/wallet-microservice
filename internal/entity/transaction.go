@@ -3,6 +3,8 @@ package entity
 import (
 	"errors"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Transaction struct {
@@ -15,6 +17,7 @@ type Transaction struct {
 
 func NewTransaction(accountFrom *Account, accountTo *Account, amount float64) (*Transaction, error) {
 	transaction := &Transaction{
+		ID:          uuid.New().String(),
 		AccountFrom: accountFrom,
 		AccountTo:   accountTo,
 		Amount:      amount,
