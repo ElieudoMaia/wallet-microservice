@@ -27,7 +27,11 @@ func (h *WebTransactionHandler) CreateTransaction(w http.ResponseWriter, r *http
 
 	output, err := h.CreateTrasactionUseCase.Execute(r.Context(), dto)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
+		// json response
+		w.Header().Add("Content-Type", "application/json")
+		// put response body as { error: "error message" }
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
 
