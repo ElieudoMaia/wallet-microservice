@@ -41,7 +41,7 @@ func NewCreateTransactionUseCase(
 	}
 }
 
-func (uc *CreateTransactionUseCase) Execute(ctx context.Context, input *CreateTransactionInputDTO) (*CreateTransactionOutputDTO, error) {
+func (uc *CreateTransactionUseCase) Execute(ctx context.Context, input CreateTransactionInputDTO) (*CreateTransactionOutputDTO, error) {
 	output := &CreateTransactionOutputDTO{}
 
 	err := uc.Uow.Do(ctx, func(_ *uow.Uow) error {
