@@ -24,7 +24,7 @@ func TestCreateTransactionUseCaseExecute(t *testing.T) {
 	mockUow := &mocks.UowMock{}
 	mockUow.On("Do", mock.Anything, mock.Anything).Return(nil)
 
-	inputDto := &CreateTransactionInputDTO{
+	inputDto := CreateTransactionInputDTO{
 		AccountIDFrom: account1.ID,
 		AccountIDTo:   account2.ID,
 		Amount:        100,
