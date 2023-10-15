@@ -1,0 +1,27 @@
+POST http://localhost:8080/clients HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Elieudo Maia",
+    "email": "me@mail.com"
+}
+
+###
+
+POST http://localhost:8080/accounts HTTP/1.1
+Content-Type: application/json
+
+{
+    "client_id": "64326fb7-f63c-4b1b-9ccf-f0cd617a8aed"
+}
+
+###
+
+POST http://localhost:8080/transactions HTTP/1.1
+Content-Type: application/json
+
+{
+    "account_id_from": "28092e5e-973f-44ee-95ba-5a03d1d7822e",
+    "account_id_to": "f93cc20e-ade4-4919-9bd3-9aa91aad4f66",
+    "amount": 40
+}
