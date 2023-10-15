@@ -5,14 +5,17 @@ import (
 	"database/sql"
 	"fmt"
 
+	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/elieudomaia/ms-wallet-app/internal/database"
 	"github.com/elieudomaia/ms-wallet-app/internal/event"
+	handler "github.com/elieudomaia/ms-wallet-app/internal/event/handlers"
 	"github.com/elieudomaia/ms-wallet-app/internal/usecase/create_account"
 	"github.com/elieudomaia/ms-wallet-app/internal/usecase/create_client"
 	"github.com/elieudomaia/ms-wallet-app/internal/usecase/create_transaction"
 	"github.com/elieudomaia/ms-wallet-app/internal/web"
 	"github.com/elieudomaia/ms-wallet-app/internal/web/webserver"
 	"github.com/elieudomaia/ms-wallet-app/pkg/events"
+	"github.com/elieudomaia/ms-wallet-app/pkg/kafka"
 	"github.com/elieudomaia/ms-wallet-app/pkg/uow"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -24,9 +27,15 @@ func main() {
 	}
 	defer db.Close()
 
+	configMap := ckafka.ConfigMap{
+		"bootstrap.servers": "kafka:29092",
+		"group.id":          "wallet",
+	}
+	kafkaProducer := kafka.NewKafkaProducer(&configMap)
+
 	eventDispatcher := events.NewEventDispatcher()
+	eventDispatcher.Register("TransactionCreated", handler.NewTransactionCreatedKafkaHandler(kafkaProducer))
 	transactionCreatedEvent := event.NewTransactionCreatedEvent()
-	// eventDispatcher.Register("TransactionCreated", handler)
 
 	clientDb := database.NewClientDB(db)
 	accountDb := database.NewAccountDB(db)
