@@ -21,7 +21,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/wallet?parseTime=true")
+	db, err := sql.Open("mysql", "root:root@tcp(mysql:3306)/wallet?parseTime=true")
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +35,9 @@ func main() {
 
 	eventDispatcher := events.NewEventDispatcher()
 	eventDispatcher.Register("TransactionCreated", handler.NewTransactionCreatedKafkaHandler(kafkaProducer))
+	eventDispatcher.Register("BalanceUpdated", handler.NewUpdateBalanceKafkaHandler(kafkaProducer))
 	transactionCreatedEvent := event.NewTransactionCreatedEvent()
+	balanceUpdatedEvent := event.NewBalanceUpdatedEvent()
 
 	clientDb := database.NewClientDB(db)
 	accountDb := database.NewAccountDB(db)
@@ -51,7 +53,12 @@ func main() {
 		return database.NewTransactionDB(db)
 	})
 
-	createTransactionUseCase := create_transaction.NewCreateTransactionUseCase(uow, eventDispatcher, transactionCreatedEvent)
+	createTransactionUseCase := create_transaction.NewCreateTransactionUseCase(
+		uow,
+		eventDispatcher,
+		transactionCreatedEvent,
+		balanceUpdatedEvent,
+	)
 	createClientUseCase := create_client.NewCreateClientUseCase(clientDb)
 	createAccountUseCase := create_account.NewCreateAccountUseCase(accountDb, clientDb)
 
