@@ -1,14 +1,8 @@
 # Wallet Microservice
-Projeto utilizado no módulo de "Arquitetura de Microserviços" e "Arquitetura Baseada em Eventos", do curso Fullcyle 3.0
+The wallet-microservice is a microservice written in Go with an event-driven architecture. Access to resources is provided through a RESTful API. The project features substantial unit and integration test coverage, and is organized in a structured manner to ensure the project remains fully maintainable.
 
-### Iniciando projeto em GO
-go mod init github.com/elieudomaia/arquitetura-microservicos
+### Run Application
+`go run cmd/wallatcore/main.go`
 
-### Instalando os pacotes do qual o projeto é dependente
-go mod tidy
-
-### Rodar todos os testes de todas as pastas
-go test ./...
-
-### Instando pacote do sqlite
-go get github.com/mattn/go-sqlite3
+### Run tests
+`go test ./...`
